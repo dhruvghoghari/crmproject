@@ -352,31 +352,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
 
-
-                    // Align(
-                    //   alignment: Alignment.centerLeft ,
-                    //   child: Text("testing",style: TextStyle(
-                    //       fontSize: 15.0,
-                    //       fontWeight: FontWeight.bold
-                    //   ),),
-                    // ),
-                    // SizedBox(height: 5),
-                    // DropdownButton(
-                    //   isExpanded: true,
-                    //   value: selected,
-                    //   onChanged: (val) {
-                    //     setState(() {
-                    //       selected = val!;
-                    //     });
-                    //   },
-                    //   items: provider!.allData?.map((obj) {
-                    //     return DropdownMenuItem(
-                    //       child: Text(obj.title.toString()),  // Access the title property directly
-                    //       value: obj.id.toString(),
-                    //     );
-                    //   })?.toList() ?? [],
-                    //
-                    // ),
                   ],
                 )
               ],

@@ -26,13 +26,17 @@ class ApiHandler {
     }
   }
 
-  static Future<dynamic> getRequest (String url) async {
+  static Future<dynamic> getRequest (String url,header) async {
     Uri uri = Uri.parse(url);
     try {
-      http.Response response = await http.get(uri);
+      http.Response response = await http.get(uri,headers: header);
+      print(response.body);
       if (response.statusCode == 200) {
-        return json.decode(response.body);
-      } else {
+        final List<dynamic> data = json.decode(response.body);
+        var categories = data.map((category) => category['name'].toString()).toList();
+      }
+      else
+      {
         throw ErrorHandler(code: response.statusCode ,message: "");
       }
     } on FormatException {

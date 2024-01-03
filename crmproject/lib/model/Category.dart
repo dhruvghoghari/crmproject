@@ -1,43 +1,35 @@
 class Category {
   int? id;
-  String? categoryName;
   String? projectName;
-  bool? isActive;
-  int? companyID;
-  int? projectID;
-  String? cguid;
+  String? status;
+  int? companyId;
+  String? description;
   int? refId;
 
   Category(
       {this.id,
-        this.categoryName,
         this.projectName,
-        this.isActive,
-        this.companyID,
-        this.projectID,
-        this.cguid,
+        this.status,
+        this.companyId,
+        this.description,
         this.refId});
 
   Category.fromJson(Map<String, dynamic> json) {
     id = json['Id'];
-    categoryName = json['CategoryName'];
     projectName = json['ProjectName'];
-    isActive = json['IsActive'];
-    companyID = json['CompanyID'];
-    projectID = json['ProjectID'];
-    cguid = json['Cguid'];
+    status = json['Status'];
+    companyId = json['CompanyId'];
+    description = json['Description'];
     refId = json['RefId'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['Id'] = this.id;
-    data['CategoryName'] = this.categoryName;
     data['ProjectName'] = this.projectName;
-    data['IsActive'] = this.isActive;
-    data['CompanyID'] = this.companyID;
-    data['ProjectID'] = this.projectID;
-    data['Cguid'] = this.cguid;
+    data['Status'] = this.status;
+    data['CompanyId'] = this.companyId;
+    data['Description'] = this.description;
     data['RefId'] = this.refId;
     return data;
   }
