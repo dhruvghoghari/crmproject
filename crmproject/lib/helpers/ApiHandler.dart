@@ -32,8 +32,7 @@ class ApiHandler {
       http.Response response = await http.get(uri,headers: header);
       print(response.body);
       if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
-        var categories = data.map((category) => category['name'].toString()).toList();
+        return json.decode(response.body);
       }
       else
       {

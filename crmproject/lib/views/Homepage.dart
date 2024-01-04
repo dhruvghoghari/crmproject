@@ -1,9 +1,13 @@
+import 'package:animated_custom_dropdown/custom_dropdown.dart';
+import 'package:crmproject/provider/SubcategoryProvider.dart';
 import 'package:crmproject/views/HomeScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import '../model/Category.dart';
 import '../provider/CategoryProvider.dart';
+import '../provider/maincategoryProvider.dart';
 
 
 class Homepage extends StatefulWidget {
@@ -34,45 +38,57 @@ class _HomepageState extends State<Homepage> {
     }
   }
 
-  CategoryProvider? provider;
-  List<String> projectNames = [];
-  List<String> categoryNames = [];
-  List<String> subCategoryNames = [];
-  List<String> timePeriods = [];
+
+  CategoryProvider? obj;
+  Category? selectedValue;
+
+  SubcategoryProvider? subobj;
+  var cateValue="";
+
+  maincategoryProvider? mainobj;
+  var creatvalue ="";
 
 
-  Getcategory() async {
-    await provider!.Getcategory(context);
-    fetchDropdownData();
+
+
+  Getdata() async
+  {
+    await obj!.Getcategory(context);
+
   }
 
-  void fetchDropdownData() async{
-    projectNames = provider?.projectNames ?? [];
-    categoryNames = provider?.categoryNames ?? [];
-    subCategoryNames = provider?.subCategoryNames ?? [];
-    timePeriods = provider?.timePeriods ?? [];
+  subcatgory() async
+  {
+    await subobj!.Getsubcategory(context);
+  }
+
+  mainuser() async
+  {
+    await mainobj!.maincategory(context);
   }
 
 
   @override
   void initState() {
     super.initState();
-    provider = Provider.of<CategoryProvider>(context, listen: false);
-    Getcategory();
+    obj     =   Provider.of<CategoryProvider>(context, listen: false);
+    subobj  =   Provider.of<SubcategoryProvider>(context, listen: false);
+    mainobj =   Provider.of<maincategoryProvider>(context, listen: false);
 
+    Getdata();
+    subcatgory();
+    mainuser();
   }
-  //
-  // final List<String> items = [
-  //   'INCOME TAX',
-  //   'TDS',
-  //   'GST'
-  // ];
-  String? selectedValue;
+
+  var items = [
+    'Item 1 '
+    'Item 2',
+    'Item 3',
+  ];
 
 
   @override
   Widget build(BuildContext context) {
-    provider = Provider.of<CategoryProvider>(context, listen: true);
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
@@ -96,61 +112,59 @@ class _HomepageState extends State<Homepage> {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(15.0),
-          child: Column(
+          child: (obj==null)?Center(child: CircularProgressIndicator()):Column(
             children: [
-              Align(
-                alignment: Alignment.centerLeft ,
-                child: Text("Project Name ",style: TextStyle(
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.bold
-                ),),
-              ),
-              SizedBox(height: 5),
-              DropdownButtonFormField2<String>(
-                isExpanded: true,
-                decoration: InputDecoration(
-                  hintText: "Default Department",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                ),
-                items: projectNames.map((item) => DropdownMenuItem<String>(
-                  value: item,
-                  child: Text(item,style: const TextStyle(
-                      fontSize: 14,
-                    ),
-                  ),
-                )).toList(),
-                validator: (value)
-                {
-                  if (value == null) {
-                    return 'Please select Project Name.';
-                  }
-                  return null;
-                },
-                onChanged: (value) {
-                },
-                onSaved: (value) {
-                  selectedValue = value.toString();
-                },
-                buttonStyleData: const ButtonStyleData(
-                  padding: EdgeInsets.only(right: 8),
-                ),
-                iconStyleData: const IconStyleData(
-                  icon: Icon(Icons.arrow_drop_down,color: Colors.black45,
-                  ),
-                  iconSize: 28,
-                ),
-                dropdownStyleData: DropdownStyleData(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                ),
-                menuItemStyleData: const MenuItemStyleData(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                ),
-              ),
-              SizedBox(height: 5),
+
+              // Align(
+              //   alignment: Alignment.centerLeft ,
+              //   child: Text("Project Name ",style: TextStyle(
+              //       fontSize: 15.0,
+              //       fontWeight: FontWeight.bold
+              //   ),),
+              // ),
+              // SizedBox(height: 5),
+              // DropdownButtonFormField2<Category>(
+              //   isExpanded: true,
+              //   decoration: InputDecoration(
+              //     hintText: "Default Department",
+              //     border: OutlineInputBorder(
+              //       borderRadius: BorderRadius.circular(5),
+              //     ),
+              //   ),
+              //   items: obj!.allData!.map((value) {
+              //     return DropdownMenuItem<Category>(
+              //       value: selectedValue,
+              //       child: Text(value.projectName.toString(),
+              //         style: const TextStyle(
+              //           fontSize: 14,
+              //         ),
+              //       ),
+              //     );
+              //   }).toList(),
+              //   onChanged: (Category? newValue) {
+              //     setState(() {
+              //       selectedValue = newValue;
+              //       print('print selected project name ${selectedValue!.projectName}');
+              //     });
+              //   },
+              //   buttonStyleData: const ButtonStyleData(
+              //     padding: EdgeInsets.only(right: 8),
+              //   ),
+              //   iconStyleData: const IconStyleData(
+              //     icon: Icon(Icons.arrow_drop_down,color: Colors.black45,
+              //     ),
+              //     iconSize: 28,
+              //   ),
+              //   dropdownStyleData: DropdownStyleData(
+              //     decoration: BoxDecoration(
+              //       borderRadius: BorderRadius.circular(15),
+              //     ),
+              //   ),
+              //   menuItemStyleData: const MenuItemStyleData(
+              //     padding: EdgeInsets.symmetric(horizontal: 16),
+              //   ),
+              // ),
+              // SizedBox(height: 5),
 
               Align(
                 alignment: Alignment.centerLeft ,
@@ -163,30 +177,28 @@ class _HomepageState extends State<Homepage> {
               DropdownButtonFormField2<String>(
                 isExpanded: true,
                 decoration: InputDecoration(
-                  hintText: "Default Department",
+                  hintText: "Select Category Name",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5),
                   ),
                 ),
-                items: categoryNames
-                    .map((item) => DropdownMenuItem<String>(
-                  value: item,
-                  child: Text(item,style: const TextStyle(
-                    fontSize: 14,
-                  ),
-                  ),
-                )).toList(),
-                validator: (value)
-                {
-                  if (value == null) {
-                    return 'Select Category Name.';
-                  }
-                  return null;
-                },
-                onChanged: (value) {
+                items: subobj?.allctgry!.map((value) {
+                  return DropdownMenuItem<String>(
+                    value: value.categoryName,
+                    child: Text(value.categoryName ?? '',
+                      style: const TextStyle(
+                        fontSize: 14,
+                      ),
+                    ),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    cateValue = newValue ?? '';
+                  });
                 },
                 onSaved: (value) {
-                  selectedValue = value.toString();
+                  cateValue = value.toString();
                 },
                 buttonStyleData: const ButtonStyleData(
                   padding: EdgeInsets.only(right: 8),
@@ -223,25 +235,23 @@ class _HomepageState extends State<Homepage> {
                     borderRadius: BorderRadius.circular(5),
                   ),
                 ),
-                items: subCategoryNames
-                    .map((item) => DropdownMenuItem<String>(
-                  value: item,
-                  child: Text(item,style: const TextStyle(
-                    fontSize: 14,
+                  items: mainobj?.getdepartmnt!.map((value) {
+                return DropdownMenuItem<String>(
+                  value: value.heading,
+                  child: Text(value.heading ?? '',
+                    style: const TextStyle(
+                      fontSize: 14,
+                    ),
                   ),
-                  ),
-                )).toList(),
-                validator: (value)
-                {
-                  if (value == null) {
-                    return 'Select Position  Name.';
-                  }
-                  return null;
-                },
-                onChanged: (value) {
+                );
+              }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    creatvalue = newValue ?? '';
+                  });
                 },
                 onSaved: (value) {
-                  selectedValue = value.toString();
+                  creatvalue = value.toString();
                 },
                 buttonStyleData: const ButtonStyleData(
                   padding: EdgeInsets.only(right: 8),
@@ -278,25 +288,23 @@ class _HomepageState extends State<Homepage> {
                     borderRadius: BorderRadius.circular(5),
                   ),
                 ),
-                items: subCategoryNames
-                    .map((item) => DropdownMenuItem<String>(
-                  value: item,
-                  child: Text(item,style: const TextStyle(
-                    fontSize: 14,
-                  ),
-                  ),
-                )).toList(),
-                validator: (value)
-                {
-                  if (value == null) {
-                    return 'Select Sub-Category Name';
-                  }
-                  return null;
-                },
-                onChanged: (value) {
+                items: mainobj?.getdepartmnt!.map((value) {
+                  return DropdownMenuItem<String>(
+                    value: value.heading,
+                    child: Text(value.heading ?? '',
+                      style: const TextStyle(
+                        fontSize: 14,
+                      ),
+                    ),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    creatvalue = newValue ?? '';
+                  });
                 },
                 onSaved: (value) {
-                  selectedValue = value.toString();
+                  creatvalue = value.toString();
                 },
                 buttonStyleData: const ButtonStyleData(
                   padding: EdgeInsets.only(right: 8),
@@ -335,8 +343,7 @@ class _HomepageState extends State<Homepage> {
                       },
                       icon: Icon(Icons.date_range_sharp),
                     ),
-                    border: OutlineInputBorder(
-                    )
+                    border: OutlineInputBorder()
                 ),
                 controller: _date,
                 keyboardType: TextInputType.datetime,
@@ -359,8 +366,7 @@ class _HomepageState extends State<Homepage> {
                     borderRadius: BorderRadius.circular(5),
                   ),
                 ),
-                items: timePeriods
-                    .map((item) => DropdownMenuItem<String>(
+                items: items.map((item) => DropdownMenuItem<String>(
                   value: item,
                   child: Text(item,style: const TextStyle(
                     fontSize: 14,
@@ -375,9 +381,6 @@ class _HomepageState extends State<Homepage> {
                   return null;
                 },
                 onChanged: (value) {
-                },
-                onSaved: (value) {
-                  selectedValue = value.toString();
                 },
                 buttonStyleData: const ButtonStyleData(
                   padding: EdgeInsets.only(right: 8),
@@ -397,34 +400,20 @@ class _HomepageState extends State<Homepage> {
                 ),
               ),
 
-              // Align(
-              //   alignment: Alignment.centerLeft ,
-              //   child: Text("testing",style: TextStyle(
-              //       fontSize: 15.0,
-              //       fontWeight: FontWeight.bold
-              //   ),),
-              // ),
-              // SizedBox(height: 5),
-              // provider!.allData!.isNotEmpty?Container() : Container(
-              //   height: 80,
-              //   width: 80,
-              //   child: DropdownButton(
-              //     isExpanded: true,
-              //     value: selected,
-              //     onChanged: (val) {
-              //       setState(() {
-              //         selected = val!;
-              //       });
-              //     },
-              //     items: provider!.allData?.map((obj) {
-              //       return DropdownMenuItem(
-              //         child: Text('hj'),
-              //
-              //       );
-              //     }).toList() ,
-              //   ),
-              // ),
-
+              SizedBox(height: 5),
+              AnimatedContainer(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black)
+                ),
+                width: MediaQuery.of(context).size.width,
+                duration: Duration(milliseconds: 300),
+                child: CustomDropdown<String>.search(
+                  items: items,
+                  excludeSelected: false,
+                  onChanged: (value) {
+                  },
+                ),
+              ),
               SizedBox(height: 25),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,

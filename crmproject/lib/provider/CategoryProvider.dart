@@ -7,17 +7,17 @@ import 'package:flutter/cupertino.dart';
 class CategoryProvider extends ChangeNotifier
 {
 
-  List<Category>? allData;
+  List<Category> allData =[];
 
 
-  Future<void> Getcategory(BuildContext context) async {
+  Future<void> Getcategory(context) async {
     try
     {
 
      var headers=
      {
-     "Authorization":"bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJTdW1pdCIsIkdJRCI6IjQyNGFkNmQ1LTBlZTEtNDU3Zi04NWIzLTAxYjI1ZGEwYjdjZSIsImp0aSI6IjRmYmJjYThjLTY0ZTgtNDdiZS1iZDNmLWI5YzUyZTJhM2Q0NCIsImlkIjoiNDg0IiwiUmVnaWQiOiI4IiwicGFja2FnZWlkIjoiIiwiY3VzdGlkIjoiU1VNMDQ3IiwiZmlyc3RuYW1lIjoiU3VtaXQiLCJsYXN0bmFtZSI6IlZhZGhpeWFyYSIsIm1vYmlsZSI6Ijk0ODQ1NzMyOTQiLCJlbWFpbCI6InN1bWl0QGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiU3VtaXQiLCJyb2xlIjoiQWRtaW4iLCJsb2dpbnRpbWUiOiIwOC0xMi0yMDIzIDEwOjU5OjMwIiwiZXhwIjoxNzA0NjkxNzcwLCJpc3MiOiJodHRwOi8vVGF4ZmlsZUNybUdTVC5jb20iLCJhdWQiOiJodHRwOi8vVGF4ZmlsZUNybUdTVC5jb20ifQ.xJsUndfZO4fpUesgpUi6biBt3bR3UsGszIUOpJ1tPmg"
-    };
+     "Authorization":"bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJQcmluY2U5OSIsIkdJRCI6IjhkNDVkYzQ3LTZmMjktNGViMy1hM2VlLTQ0Y2FiZTU1MWE1OCIsImp0aSI6ImU3MGU1MTFmLTFmY2QtNDc4ZC05NmFmLWQ2MzIyZjJiOGMxOSIsImlkIjoiNTg4IiwiUmVnaWQiOiI4IiwicGFja2FnZWlkIjoiIiwiY3VzdGlkIjoiUHJpNzc1IiwiZmlyc3RuYW1lIjoiUHJpbmNlICIsImxhc3RuYW1lIjoiUGF0ZWwiLCJtb2JpbGUiOiIxMjM0NTY3ODkwIiwiZW1haWwiOiJQcmluY2UxMkBnbWFpbC5jb20iLCJ1c2VybmFtZSI6IlByaW5jZTk5Iiwicm9sZSI6IkFkbWluIiwibG9naW50aW1lIjoiMDQtMDEtMjAyNCAxNTo0NTowNSIsImV4cCI6MTcwNzA0MTcwNSwiaXNzIjoiaHR0cDovL1RheGZpbGVDcm1HU1QuY29tIiwiYXVkIjoiaHR0cDovL1RheGZpbGVDcm1HU1QuY29tIn0.CrVAAr7TNnVVpc_hhS7qe5cdb7x186LTtg8nEZ3TthE"
+     };
 
       await ApiHandler.getRequest(UrlResources.Get,headers).then((json) async {
         allData = json.map<Category>((obj) => Category.fromJson(obj)).toList();
