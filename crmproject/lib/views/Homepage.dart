@@ -1,13 +1,13 @@
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
-import 'package:crmproject/provider/SubcategoryProvider.dart';
-import 'package:crmproject/views/HomeScreen.dart';
+import 'package:crmproject/model/mainuser.dart';
+import 'package:crmproject/provider/CategoryProvider.dart';
 import 'package:flutter/material.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../model/Category.dart';
-import '../provider/CategoryProvider.dart';
-import '../provider/maincategoryProvider.dart';
+import '../model/Subcategory.dart';
+import '../provider/ProjectProvider.dart';
+import '../provider/SubcategoryProvider.dart';
 
 
 class Homepage extends StatefulWidget {
@@ -39,22 +39,24 @@ class _HomepageState extends State<Homepage> {
   }
 
 
-  CategoryProvider? obj;
-  Category? selectedValue;
+  ProjectProvider? obj;
+  var selectedValue="";
 
-  SubcategoryProvider? subobj;
+
+  CategoryProvider? subobj;
   var cateValue="";
 
-  maincategoryProvider? mainobj;
+  SubcategoryProvider? mainobj;
   var creatvalue ="";
 
 
-
+  Category?  selectedproject;
+  Subcategory? selectcategory;
+  mainuser? selectsubcategory;
 
   Getdata() async
   {
     await obj!.Getcategory(context);
-
   }
 
   subcatgory() async
@@ -62,7 +64,7 @@ class _HomepageState extends State<Homepage> {
     await subobj!.Getsubcategory(context);
   }
 
-  mainuser() async
+  subcate() async
   {
     await mainobj!.maincategory(context);
   }
@@ -71,20 +73,54 @@ class _HomepageState extends State<Homepage> {
   @override
   void initState() {
     super.initState();
-    obj     =   Provider.of<CategoryProvider>(context, listen: false);
-    subobj  =   Provider.of<SubcategoryProvider>(context, listen: false);
-    mainobj =   Provider.of<maincategoryProvider>(context, listen: false);
-
+    obj     =   Provider.of<ProjectProvider>(context, listen: false);
+    subobj  =   Provider.of<CategoryProvider>(context, listen: false);
+    mainobj =   Provider.of<SubcategoryProvider>(context, listen: false);
     Getdata();
     subcatgory();
-    mainuser();
+    subcate();
   }
 
   var items = [
-    'Item 1 '
-    'Item 2',
-    'Item 3',
+    'Daily',
+    'Monthly',
+    'Quarterly',
+    'Semiannually',
+    'Annually',
   ];
+  var selectitem;
+
+  Future<List<Category>> getFakeRequestData(String query) async {
+    return await Future.delayed(const Duration(seconds: 1), () {
+      return  obj!.allData.where((e) {
+        return e.projectName.toString().toLowerCase().contains(query.toLowerCase());
+      }).toList();
+    });
+  }
+
+  Future<List<Subcategory>> getcategoryRequestData(String query) async {
+    return await Future.delayed(const Duration(seconds: 1), () {
+      return  subobj!.allctgry.where((e) {
+        return e.categoryName.toString().toLowerCase().contains(query.toLowerCase());
+      }).toList();
+    });
+  }
+
+  Future<List<mainuser>> getsubcategoryRequestData(String query) async {
+    return await Future.delayed(const Duration(seconds: 1), () {
+      return  mainobj!.getdepartmnt.where((e) {
+        return e.heading.toString().toLowerCase().contains(query.toLowerCase());
+      }).toList();
+    });
+  }
+
+
+  Future<List<String>> getdata(String query) async {
+    await Future.delayed(const Duration(seconds: 1));
+    return items.where((e) {
+      return e.toLowerCase().contains(query.toLowerCase());
+    }).toList();
+  }
 
 
   @override
@@ -92,17 +128,17 @@ class _HomepageState extends State<Homepage> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-          backgroundColor: Color(0xff009688),
+          backgroundColor: const Color(0xff009688),
           title: Row(
             children: [
               IconButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                icon: Icon(Icons.arrow_back,color: Colors.white,),
+                icon: const Icon(Icons.arrow_back,color: Colors.white,),
               ),
               SizedBox(width: 15),
-              Text("Auto Task",style: TextStyle(
+              const Text("Auto Task",style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20.0,
                 color: Colors.white,
@@ -112,59 +148,41 @@ class _HomepageState extends State<Homepage> {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(15.0),
-          child: (obj==null)?Center(child: CircularProgressIndicator()):Column(
+          child: Column(
             children: [
 
-              // Align(
-              //   alignment: Alignment.centerLeft ,
-              //   child: Text("Project Name ",style: TextStyle(
-              //       fontSize: 15.0,
-              //       fontWeight: FontWeight.bold
-              //   ),),
-              // ),
-              // SizedBox(height: 5),
-              // DropdownButtonFormField2<Category>(
-              //   isExpanded: true,
-              //   decoration: InputDecoration(
-              //     hintText: "Default Department",
-              //     border: OutlineInputBorder(
-              //       borderRadius: BorderRadius.circular(5),
-              //     ),
-              //   ),
-              //   items: obj!.allData!.map((value) {
-              //     return DropdownMenuItem<Category>(
-              //       value: selectedValue,
-              //       child: Text(value.projectName.toString(),
-              //         style: const TextStyle(
-              //           fontSize: 14,
-              //         ),
-              //       ),
-              //     );
-              //   }).toList(),
-              //   onChanged: (Category? newValue) {
-              //     setState(() {
-              //       selectedValue = newValue;
-              //       print('print selected project name ${selectedValue!.projectName}');
-              //     });
-              //   },
-              //   buttonStyleData: const ButtonStyleData(
-              //     padding: EdgeInsets.only(right: 8),
-              //   ),
-              //   iconStyleData: const IconStyleData(
-              //     icon: Icon(Icons.arrow_drop_down,color: Colors.black45,
-              //     ),
-              //     iconSize: 28,
-              //   ),
-              //   dropdownStyleData: DropdownStyleData(
-              //     decoration: BoxDecoration(
-              //       borderRadius: BorderRadius.circular(15),
-              //     ),
-              //   ),
-              //   menuItemStyleData: const MenuItemStyleData(
-              //     padding: EdgeInsets.symmetric(horizontal: 16),
-              //   ),
-              // ),
-              // SizedBox(height: 5),
+              Align(
+                alignment: Alignment.centerLeft ,
+                child: Text("Project Name ",style: TextStyle(
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.bold
+                ),),
+              ),
+              SizedBox(height: 5),
+              Container(
+                decoration: BoxDecoration(
+                border: Border.all(color: Colors.black),
+              ),
+              width: MediaQuery.of(context).size.width,
+              child: CustomDropdown<Category>.searchRequest(
+                futureRequest: getFakeRequestData,
+                listItemBuilder: (context, item, isSelected, onItemSelect){
+                  return Text(item.projectName.toString());
+                },
+                headerBuilder: (context, selectedItem) {
+                  return Text(selectedproject != null ? selectedproject!.projectName.toString() : 'select Project');
+                },
+                items: obj!.allData,
+                onChanged: (Category? newValue) {
+                  setState(() {
+                    selectedproject = newValue!;
+                  });
+                },
+                excludeSelected: false,
+                hintText: "Default Department",
+              ),
+            ),
+              SizedBox(height: 5),
 
               Align(
                 alignment: Alignment.centerLeft ,
@@ -174,47 +192,27 @@ class _HomepageState extends State<Homepage> {
                 ),),
               ),
               SizedBox(height: 5),
-              DropdownButtonFormField2<String>(
-                isExpanded: true,
-                decoration: InputDecoration(
-                  hintText: "Select Category Name",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black),
                 ),
-                items: subobj?.allctgry!.map((value) {
-                  return DropdownMenuItem<String>(
-                    value: value.categoryName,
-                    child: Text(value.categoryName ?? '',
-                      style: const TextStyle(
-                        fontSize: 14,
-                      ),
-                    ),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    cateValue = newValue ?? '';
-                  });
-                },
-                onSaved: (value) {
-                  cateValue = value.toString();
-                },
-                buttonStyleData: const ButtonStyleData(
-                  padding: EdgeInsets.only(right: 8),
-                ),
-                iconStyleData: const IconStyleData(
-                  icon: Icon(Icons.arrow_drop_down,color: Colors.black45,
-                  ),
-                  iconSize: 28,
-                ),
-                dropdownStyleData: DropdownStyleData(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                ),
-                menuItemStyleData: const MenuItemStyleData(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
+                width: MediaQuery.of(context).size.width,
+                child: CustomDropdown<Subcategory>.searchRequest(
+                  futureRequest: getcategoryRequestData,
+                  listItemBuilder: (context, item, isSelected, onItemSelect){
+                    return Text(item.categoryName.toString());
+                  },
+                  headerBuilder: (context, selectedItem) {
+                    return Text(selectcategory != null ? selectcategory!.categoryName.toString() : 'select Project');
+                  },
+                  items: subobj!.allctgry,
+                  onChanged: (Subcategory? newValue) {
+                    setState(() {
+                      selectcategory = newValue;
+                    });
+                  },
+                  excludeSelected: false,
+                  hintText: "Select Category Name ",
                 ),
               ),
               SizedBox(height: 5),
@@ -227,102 +225,31 @@ class _HomepageState extends State<Homepage> {
                 ),),
               ),
               SizedBox(height: 5),
-              DropdownButtonFormField2<String>(
-                isExpanded: true,
-                decoration: InputDecoration(
-                  hintText: "Default Department",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black),
                 ),
-                  items: mainobj?.getdepartmnt!.map((value) {
-                return DropdownMenuItem<String>(
-                  value: value.heading,
-                  child: Text(value.heading ?? '',
-                    style: const TextStyle(
-                      fontSize: 14,
-                    ),
-                  ),
-                );
-              }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    creatvalue = newValue ?? '';
-                  });
-                },
-                onSaved: (value) {
-                  creatvalue = value.toString();
-                },
-                buttonStyleData: const ButtonStyleData(
-                  padding: EdgeInsets.only(right: 8),
-                ),
-                iconStyleData: const IconStyleData(
-                  icon: Icon(Icons.arrow_drop_down,color: Colors.black45,
-                  ),
-                  iconSize: 28,
-                ),
-                dropdownStyleData: DropdownStyleData(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                ),
-                menuItemStyleData: const MenuItemStyleData(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
+                width: MediaQuery.of(context).size.width,
+                child: CustomDropdown<mainuser>.searchRequest(
+                  futureRequest: getsubcategoryRequestData,
+                  listItemBuilder: (context, item, isSelected, onItemSelect){
+                    return Text(item.heading.toString());
+                  },
+                  headerBuilder: (context, selectedItem) {
+                    return Text(selectsubcategory != null ? selectsubcategory!.heading.toString() : 'select Project');
+                  },
+                  items: mainobj!.getdepartmnt,
+                  onChanged: (mainuser? newValue) {
+                    setState(() {
+                      selectsubcategory = newValue;
+                    });
+                  },
+                  excludeSelected: false,
+                  hintText: "Select Sub-Category Name",
                 ),
               ),
+              SizedBox(height: 5),
 
-              SizedBox(height: 5),
-              Align(
-                alignment: Alignment.centerLeft ,
-                child: Text("Sub-Category Name ",style: TextStyle(
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.bold
-                ),),
-              ),
-              SizedBox(height: 5),
-              DropdownButtonFormField2<String>(
-                isExpanded: true,
-                decoration: InputDecoration(
-                  hintText: "Default Department",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                ),
-                items: mainobj?.getdepartmnt!.map((value) {
-                  return DropdownMenuItem<String>(
-                    value: value.heading,
-                    child: Text(value.heading ?? '',
-                      style: const TextStyle(
-                        fontSize: 14,
-                      ),
-                    ),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    creatvalue = newValue ?? '';
-                  });
-                },
-                onSaved: (value) {
-                  creatvalue = value.toString();
-                },
-                buttonStyleData: const ButtonStyleData(
-                  padding: EdgeInsets.only(right: 8),
-                ),
-                iconStyleData: const IconStyleData(
-                  icon: Icon(Icons.arrow_drop_down,color: Colors.black45,
-                  ),
-                  iconSize: 28,
-                ),
-                dropdownStyleData: DropdownStyleData(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                ),
-                menuItemStyleData: const MenuItemStyleData(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                ),
-              ),
 
               SizedBox(height: 5),
               Align(
@@ -337,19 +264,20 @@ class _HomepageState extends State<Homepage> {
               ),
               TextField(
                 decoration: InputDecoration(
-                    suffixIcon: IconButton(
-                      onPressed: (){
-                        _selectedDate(context);
-                      },
-                      icon: Icon(Icons.date_range_sharp),
-                    ),
-                    border: OutlineInputBorder()
+                  hintText: "Select Time",
+                  hintStyle: TextStyle(color: Colors.grey),
+                  suffixIcon: IconButton(
+                    onPressed: (){
+                      _selectedDate(context);
+                    },
+                    icon: Icon(Icons.date_range_sharp),
+                  ),
+                  border: OutlineInputBorder(),
                 ),
                 controller: _date,
-                keyboardType: TextInputType.datetime,
               ),
-
               SizedBox(height: 5),
+
               Align(
                 alignment: Alignment.centerLeft ,
                 child: Text("Time Period ",style: TextStyle(
@@ -358,62 +286,27 @@ class _HomepageState extends State<Homepage> {
                 ),),
               ),
               SizedBox(height: 5),
-              DropdownButtonFormField2<String>(
-                isExpanded: true,
-                decoration: InputDecoration(
-                  hintText: "Select Time Period",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                ),
-                items: items.map((item) => DropdownMenuItem<String>(
-                  value: item,
-                  child: Text(item,style: const TextStyle(
-                    fontSize: 14,
-                  ),
-                  ),
-                )).toList(),
-                validator: (value)
-                {
-                  if (value == null) {
-                    return 'Enter Time Period';
-                  }
-                  return null;
-                },
-                onChanged: (value) {
-                },
-                buttonStyleData: const ButtonStyleData(
-                  padding: EdgeInsets.only(right: 8),
-                ),
-                iconStyleData: const IconStyleData(
-                  icon: Icon(Icons.arrow_drop_down,color: Colors.black45,
-                  ),
-                  iconSize: 28,
-                ),
-                dropdownStyleData: DropdownStyleData(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                ),
-                menuItemStyleData: const MenuItemStyleData(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                ),
-              ),
-
-              SizedBox(height: 5),
-              AnimatedContainer(
+              Container(
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black)
+                  border: Border.all(color: Colors.black),
                 ),
                 width: MediaQuery.of(context).size.width,
-                duration: Duration(milliseconds: 300),
-                child: CustomDropdown<String>.search(
+                child: CustomDropdown<String>.searchRequest(
+                  futureRequest:getdata,
                   items: items,
-                  excludeSelected: false,
-                  onChanged: (value) {
+                  listItemBuilder: (context, item, isSelected, onItemSelect){
+                    return Text(item.toString());
                   },
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectitem = newValue;
+                    });
+                  },
+                  hintText: "Select Time Period ",
                 ),
               ),
+              SizedBox(height: 5),
+
               SizedBox(height: 25),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -432,8 +325,7 @@ class _HomepageState extends State<Homepage> {
                             ),
                           ),
                         ),
-                        child: Text("Save",
-                          style: TextStyle(
+                        child: Text("Save",style: TextStyle(
                             color: Color(0xffFFFFFF),
                             fontSize: 20.0,
                           ),
@@ -453,8 +345,7 @@ class _HomepageState extends State<Homepage> {
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(Color(0xffFFFFFF)),
                         ),
-                        child: Text("Cancel",
-                          style: TextStyle(
+                        child: Text("Cancel",style: TextStyle(
                             color: Color(0xff009688),
                             fontSize: 20.0,
                           ),

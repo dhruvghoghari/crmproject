@@ -1,14 +1,14 @@
-class userid {
+class mainuser {
   int? id;
   String? heading;
   int? categoryId;
   int? companyId;
-  Null? isActive;
+  bool? isActive;
   String? categoryName;
-  Null? cguid;
+  String? cguid;
   int? refId;
 
-  userid(
+  mainuser(
       {this.id,
         this.heading,
         this.categoryId,
@@ -18,7 +18,7 @@ class userid {
         this.cguid,
         this.refId});
 
-  userid.fromJson(Map<String, dynamic> json) {
+  mainuser.fromJson(Map<String, dynamic> json) {
     id = json['Id'];
     heading = json['Heading'];
     categoryId = json['CategoryId'];

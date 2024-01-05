@@ -39,7 +39,6 @@ dependencies:
   http:
   provider:
   intl:
-  dropdown_button2:
   animated_custom_dropdown:
 
 dev_dependencies:
