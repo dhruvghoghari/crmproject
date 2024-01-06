@@ -22,8 +22,8 @@ class CategoryProvider extends ChangeNotifier
 
       await ApiHandler.getRequest(UrlResources.Subcategory,headers).then((json) async {
         allctgry = json.map<Subcategory>((obj) => Subcategory.fromJson(obj)).toList();
-        print('printlist');
-        print( allctgry);
+        // print('printlist');
+        // print( allctgry);
         notifyListeners();
       });
     }

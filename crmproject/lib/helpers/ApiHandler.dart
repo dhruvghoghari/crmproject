@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'ErrorHandler.dart';
 
 class ApiHandler {
@@ -10,6 +11,7 @@ class ApiHandler {
     Uri uri = Uri.parse(url);
     try {
       http.Response response = await http.post(uri, headers: headers, body: body, encoding: encoding);
+      print(response.body);
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else {
@@ -30,7 +32,7 @@ class ApiHandler {
     Uri uri = Uri.parse(url);
     try {
       http.Response response = await http.get(uri,headers: header);
-      print(response.body);
+      // print(response.body);
       if (response.statusCode == 200) {
         return json.decode(response.body);
       }

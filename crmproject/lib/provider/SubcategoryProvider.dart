@@ -21,8 +21,7 @@ class SubcategoryProvider extends ChangeNotifier
 
       await ApiHandler.getRequest(UrlResources.mainsubcategory,headers).then((json) async {
         getdepartmnt = json.map<mainuser>((obj) => mainuser.fromJson(obj)).toList();
-        print('printlist');
-        print( mainuser);
+        // print('printlist');
         notifyListeners();
       });
     }
